@@ -6,7 +6,7 @@ const app = express();
 app.use(express.json());
 
 mongoose.set('strictQuery', true);
-mongoose.connect("mongodb+srv://RahulSinghDhek:IQpy326QQQKAkK2J@cluster0.dxzlfnc.mongodb.net/group6Database?retryWrites=true&w=majority", {
+mongoose.connect("mongodb+srv://RahulSinghDhek:IQpy326QQQKAkK2J@cluster0.dxzlfnc.mongodb.net/ProeliumDB?retryWrites=true&w=majority", {
     useNewUrlParser: true
 })
     .then(() => console.log("MongoDb is connected"))
