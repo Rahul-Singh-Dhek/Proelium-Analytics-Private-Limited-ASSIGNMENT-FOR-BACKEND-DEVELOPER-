@@ -1,7 +1,7 @@
 const adminAndUserModel = require("../models/admin&userModel.js")
 const validator = require("../validator/validator.js")
 const bcrypt = require("bcrypt")
-const mongoose=require('mongoose')
+const mongoose = require('mongoose')
 const jwt = require("jsonwebtoken")
 
 const add = async (req, res) => {
@@ -72,9 +72,9 @@ const add = async (req, res) => {
             return res.status(400).send({ status: false, message: "Please provide Role in request body." })
         }
 
-        if(req.body["Department"]!=undefined){
-            if(typeof req.body["Department"]!="string"){
-                return res.status(400).send({ status: false, message: "Please provide Department as string in request body."})
+        if (req.body["Department"] != undefined) {
+            if (typeof req.body["Department"] != "string") {
+                return res.status(400).send({ status: false, message: "Please provide Department as string in request body." })
             }
         }
 
@@ -138,36 +138,36 @@ const login = async (req, res) => {
 
 }
 
-const update=async (req,res)=>{
+const update = async (req, res) => {
 
-    if(Object.keys(req.body).length==0){
-        return res.status(400).send({status:false,message:`Please provide at least one field to update in request body`})
+    if (Object.keys(req.body).length == 0) {
+        return res.status(400).send({ status: false, message: `Please provide at least one field to update in request body` })
     }
 
-    let arr=["First Name","Middle Name","Last Name","Email","Role","Department"]
-    for(let key in req.body){
-        if(!arr.includes(key)){
-            return res.status(400).send({status:false,message:`Invalid ${key} field to update.`})
+    let arr = ["First Name", "Middle Name", "Last Name", "Email", "Role", "Department"]
+    for (let key in req.body) {
+        if (!arr.includes(key)) {
+            return res.status(400).send({ status: false, message: `Invalid ${key} field to update.` })
         }
     }
 
     let person;
-    if(req.params.updateId==undefined){
-        return res.status(400).send({status:false,message:`Please provide userId of preson, whose profile you want to update or if you want to update your profile then just write 'Self' in the path params`})
+    if (req.params.updateId == undefined) {
+        return res.status(400).send({ status: false, message: `Please provide userId of preson, whose profile you want to update or if you want to update your profile then just write 'Self' in the path params` })
     }
-    if(req.params.updateId=="Self"||req.params.updateId==req.tokenUser._id){
-        req.params.updateId=req.tokenUser._id
-        person=req.tokenUser
-    }else{
-        if(!mongoose.isValidObjectId(req.params.updateId)){
-            return res.status(400).send({status:false,message:`Please provide valid userId in request params.`})
+    if (req.params.updateId == "Self" || req.params.updateId == req.tokenUser._id) {
+        req.params.updateId = req.tokenUser._id
+        person = req.tokenUser
+    } else {
+        if (!mongoose.isValidObjectId(req.params.updateId)) {
+            return res.status(400).send({ status: false, message: `Please provide valid userId in request params.` })
         }
-        person=await adminAndUserModel.findById(req.params.updateId)
+        person = await adminAndUserModel.findById(req.params.updateId)
     }
 
 
-    if(req.tokenUser.Role=="User"&&person.Role=="Admin"){
-        return res.status(400).send({status:false,message:`A User cannot update profile of an Admin.`})
+    if (req.tokenUser.Role == "User" && person.Role == "Admin") {
+        return res.status(400).send({ status: false, message: `A User cannot update profile of an Admin.` })
     }
 
     if (req.body["First Name"] != undefined) {
@@ -197,7 +197,7 @@ const update=async (req,res)=>{
             return res.status(400).send({ status: false, message: "Email already exists please provide unique Email to Update." })
         }
     }
-    
+
     if (req.body["Role"] != undefined) {
         let roles = ["Admin", "User"]
         if (!roles.includes(req.body["Role"])) {
@@ -208,20 +208,76 @@ const update=async (req,res)=>{
         }
     }
 
-    if(req.body["Department"]!=undefined){
-        if(typeof req.body["Department"]!="string"){
-            return res.status(400).send({ status: false, message: "Please provide Department as string in request body."})
+    if (req.body["Department"] != undefined) {
+        if (typeof req.body["Department"] != "string") {
+            return res.status(400).send({ status: false, message: "Please provide Department as string in request body." })
         }
     }
 
-    let savedData=await adminAndUserModel.findByIdAndUpdate(req.params.updateId,req.body,{new:true})
-    return res.status(201).send({status:false,message:"Profile Successfully Updated",data:savedData})
+    let savedData = await adminAndUserModel.findByIdAndUpdate(req.params.updateId, req.body, { new: true })
+    return res.status(201).send({ status: false, message: "Profile Successfully Updated", data: savedData })
 
 }
 
-const view=async (req,res)=>{
-    
+const view = async (req, res) => {
+    let arr = ["First Name", "Middle Name", "Last Name", "Email", "Role", "Department", "createdAt", "updatedAt"]
+    for (let key in req.query) {
+        if (!arr.includes(key)) {
+            return res.status(400).send({ status: false, message: `Invalid ${key} field.` })
+        }
+    }
+    if (req.params.viewId != undefined) {
+        if (!mongoose.isValidObjectId(req.params.viewId)) {
+            return res.status.send({ status: false, message: "Please provide valid ObjectId in the path Params" })
+        }
+    } else {
+        return res.status(400).send({ status: false, message: "Please provide userId that you want to view in the Path Params or if you want to view your own profile then type Self on Path Params." })
+    }
+
+    let findData
+    if (req.params.viewId == "Self" || req.params.viewId == req.tokenUser._id) {
+        findData = req.tokenUser
+    } else {
+        findData = await adminAndUserModel.findById(req.params.viewId).lean()
+        if (req.tokenUser.Role == "User" && findData.Role == "Admin") {
+            return res.status(400).send({ status: false, message: "A User cannot view profile of a Admin" })
+        }
+    }
+
+    delete findData["Password"]
+    if (Object.keys(req.query).length == 0) {
+        findData = findData
+        return res.status(200).send({ status: true, data: findData })
+    } else {
+        let output = {}
+        output._id = findData["_id"]
+        if (req.query["First Name"] == "true") {
+            output["First Name"] = findData["First Name"]
+        }
+        if (req.query["Middle Name"] == "true") {
+            output["Middle Name"] =findData["Middle Name"]
+        }
+        if (req.query["Last Name"] == "true") {
+            output["Last Name"] = findData["Last Name"]
+        }
+        if (req.query["Email"] == "true") {
+            output["Email"] = findData["Email"]
+        }
+        if (req.query["Role"] == "true") {
+            output["Role"] = findData["Role"]
+        }
+        if (req.query["Department"] == "true") {
+            output["Department"] = findData["Department"]
+        }
+        if (req.query["createdAt"] == "true") {
+            output["createdAt"] = findData["createdAt"]
+        }
+        if (req.query["updatedAt"] == "true") {
+            output["updatedAt"] = findData["updatedAt"]
+        }
+        return res.status(200).send({ status: true, data: output })
+    }
 }
 
 
-module.exports = { add, login,update }
+module.exports = { add, login, update, view }
