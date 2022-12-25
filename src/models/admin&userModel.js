@@ -8,6 +8,6 @@ const adminUserSchema = new mongoose.Schema({
     "Password":{type:String,required:true},
     "Role":{type:String,required:true,enum:["Admin","User"]},
     "Department":{type:String}
-},{timeStamps:true})
+},{timestamps:true})
 
 module.exports=new mongoose.model('users&admins',adminUserSchema) 
