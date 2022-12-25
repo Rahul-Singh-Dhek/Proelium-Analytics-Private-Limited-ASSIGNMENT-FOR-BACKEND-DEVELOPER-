@@ -1,0 +1,142 @@
+{
+	"info": {
+		"_postman_id": "6e04fde4-58e1-401d-a0cc-497a3739aecc",
+		"name": "Proelium Analytics Private Limited",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "21834591"
+	},
+	"item": [
+		{
+			"name": "Add User or Admin",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2M2E3ZWI5YjZhODNkYzU2YmMwYmZiYzMiLCJpYXQiOjE2NzE5NDkyNTJ9.CDdujLHfy1GB9sd2hiImhKTNryym7PCd_LqG_aViCVI"
+					}
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"First Name\":\"Tanmay\",\r\n    \"Last Name\":\"Hedau\",\r\n    \"Password\":\"Hedau@12345\",\r\n    \"Confirm Password\":\"Hedau@12345\",\r\n    \"Email\":\"tanmay21@gmail.com\",\r\n    \"Role\":\"User\"\r\n\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:3000/AdminOrUser/Add"
+			},
+			"response": []
+		},
+		{
+			"name": "Login User or Admin",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"Email\":\"nitish21@gmail.com\",\r\n    \"Password\":\"Nitish@12345\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:3000/AdminOrUser/Login"
+			},
+			"response": []
+		},
+		{
+			"name": "Update User or Admin",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2M2E3ZDE3ZTM3ZDZjNjUwNjUzOGJlOGIiLCJpYXQiOjE2NzE5NjAwMTd9.mDDQjH-JSZFaaOTJPS3W0Ly9mEQCMN-v5yl7DdkNmUA"
+					}
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"Middle Name\":\"Kumar\",\r\n\"Role\":\"Admin\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:3000/AdminOrUser/63a814a0a2c85ee5dd2b6264/Update"
+			},
+			"response": []
+		},
+		{
+			"name": "View User or Admin",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2M2E3ZWI5YjZhODNkYzU2YmMwYmZiYzMiLCJpYXQiOjE2NzE5ODI0ODB9.S-tKjz4rVSIJEuW_9H1cHggp4D6S6St3sP2rT5LUWFg"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/AdminOrUser/63a86e673795f1b2eb6eb39b/View?First Name=true&Middle Name=true&Last Name=true&Email=true&Role=true&Department=true&createdAt=true&updatedAt=true",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"AdminOrUser",
+						"63a86e673795f1b2eb6eb39b",
+						"View"
+					],
+					"query": [
+						{
+							"key": "First Name",
+							"value": "true"
+						},
+						{
+							"key": "Middle Name",
+							"value": "true"
+						},
+						{
+							"key": "Last Name",
+							"value": "true"
+						},
+						{
+							"key": "Password",
+							"value": "true",
+							"disabled": true
+						},
+						{
+							"key": "Email",
+							"value": "true"
+						},
+						{
+							"key": "Role",
+							"value": "true"
+						},
+						{
+							"key": "Department",
+							"value": "true"
+						},
+						{
+							"key": "createdAt",
+							"value": "true"
+						},
+						{
+							"key": "updatedAt",
+							"value": "true"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
